@@ -28,7 +28,7 @@ def sendHeartbeat():
                               routing_key='heartbeat',
                               body=evento)
         connection.close()
-        time.sleep(5)
+        time.sleep(4)
 
 
 def printIp():
