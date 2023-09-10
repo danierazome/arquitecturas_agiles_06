@@ -10,7 +10,7 @@ flask
 flask_cors
 aiven-client
 python-dotenv
-celery
+python-dotenv
 eventlet
 pika
 redis

@@ -1,11 +1,21 @@
 from flask import request
 from flask_restful import Resource
+from dotenv import dotenv_values
 
-import pika
 import redis
 
+config = dotenv_values(".env")
+
+
 redis_client = redis.StrictRedis(
-    host='localhost', port=6379, db=0, decode_responses=True)
+    host=config['REDIS_ADDRESS'], port=config['REDIS_PORT'], db=0, decode_responses=True)
+
+
+class VistaIps(Resource):
+    def get(self, servicio_name):
+        keys = redis_client.keys(servicio_name + '*')
+        ips = redis_client.mget(keys)
+        return ips
 
 
 class VistaServicio(Resource):
@@ -15,33 +25,3 @@ class VistaServicio(Resource):
         servicios_keys = redis_client.keys(service_name_pattern)
         servicios_ip = redis_client.mget(servicios_keys)
         return {"servicios_ip": servicios_ip}
-
-
-class VistaCandidato(Resource):
-
-    def post(self):
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters('172.17.0.2'))
-        channel = connection.channel()
-        channel.queue_declare(queue='hello')
-
-        servicio_info = ['rem', 2]
-        channel.basic_publish(exchange='',
-                              routing_key='hello',
-                              body=request.json['nombre'])
-
-        connection.close()
-
-        return {'mesage': 'mensage delivered', 'result': True}
-
-
-class VistaSave(Resource):
-
-    def post(self):
-        redis_client.set(request.json['nombre'], request.json['ip'], ex=5)
-        return {'mesage': 'data persisted on redis', 'result': True}
-
-    def get(self):
-        keys = redis_client.keys('dan*')
-        valued = redis_client.mget(keys)
-        return keys
