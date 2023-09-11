@@ -1,6 +1,6 @@
 # python files
-/venv
-/__pycache__
+**/venv
+**/__pycache__
 
 # IDEs and editors
 .idea/
@@ -18,4 +18,5 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+**/.vscode
 

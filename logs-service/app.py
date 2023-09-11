@@ -1,45 +1,29 @@
+from flask_coney import Coney
 from flask import Flask
 from flask_restful import Api
+from dotenv import dotenv_values
 
-from modelos import db
-from vistas import VistaCandidato
-
-from flask_migrate import Migrate
-
-import pika
-
+# ----------> FLASK APP
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://user:password@localhost:5432/arquitectura"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+
+# ----------> CONFIG
+
+config = dotenv_values(".env")
+
 app.config['PROPAGATE_EXCEPTIONS'] = True
+app.config["CONEY_BROKER_URI"] = config['RABBITMQ_URL_CONNECTION']
 
-# app_context = app.app_context()
-# app_context.push()
-
-db.init_app(app)
-
-# migrate = Migrate(app, db)
-
+# -------> API
 api = Api(app)
 
-api.add_resource(VistaCandidato, '/sign-up')
+# -------> MESSAGE BROKER
+coney = Coney(app)
 
 
-def callback(ch, method, properties, body):
-    print(f" [x] Received {body}")
-    ch.basic_ack(delivery_tag=method.delivery_tag)
-
-
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters('172.17.0.2'))
-channel = connection.channel()
-channel.queue_declare(queue='hello')
-
-channel.basic_consume(queue='hello',
-                      auto_ack=True,
-                      on_message_callback=callback)
-
-
-channel.basic_qos(prefetch_count=1)
-print(' [*] Waiting for messages. To exit press CTRL+C')
-channel.start_consuming()
+@coney.queue(queue_name="s-log")
+def process_queue(ch, method, props, body):
+    log_message = body.decode('utf-8')
+    logs = open("logs.txt", "a+")
+    logs.write(log_message + "\n")
+    logs.close()
