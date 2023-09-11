@@ -1,11 +1,15 @@
-FROM python:3.9
+FROM python:3.11.5-bullseye
+ 
+# Create app directory
 WORKDIR /app
-
-COPY ./requirements.txt /app/requirements.txt
-
+ 
+# Install app dependencies
+COPY requirements.txt ./
+ 
 RUN pip install -r requirements.txt
-RUN pip install gunicorn
-
-COPY . /app
-
-CMD ["gunicorn", "--bind", "0.0.0.0:3000", "--workers", "4", "app.app:app"]
+ 
+# Bundle app source
+COPY . .
+ 
+EXPOSE 5000
+CMD [ "flask", "run","--host","0.0.0.0","--port","5000"]

@@ -5,19 +5,21 @@ import os
 app = Flask(__name__)
 
 
-registry_service_url = os.getenv("REGISTRY_HOST", "localhost") + ":3000/api/ip"
+registry_service_url = '172.17.0.6:5000'
+
 
 @app.route('/register', methods=['POST'])
 def register_candidate():
-   
+
     if not request.is_json:
         return jsonify({'error': 'La solicitud debe ser un JSON'}), 400
 
     data = request.get_json()
-    
+
     # Realiza una solicitud GET al servicio de Registry Service para obtener las IPs activas
     try:
-        response = requests.get(f'http://{registry_service_url}/reg-can')
+        response = requests.get(
+            f'http://{registry_service_url}/api/ip/reg-can')
         response.raise_for_status()
 
         print(response)
@@ -25,16 +27,17 @@ def register_candidate():
     except requests.exceptions.RequestException as e:
         return jsonify({'error': f'Error al obtener las IPs activas: {str(e)}'}), 500
 
-    print(active_ips)
-    # simplemente usaremos la primera IP de la lista (esto debe mejorarse)
-    if active_ips:
-        print(f'http://{active_ips[0]}/sign-up')
-        registration_service = f'http://{active_ips[0]}/sign-up'
-        response = requests.post(registration_service, json=data)
-        return response.json(), response.status_code
-    else:
-        return jsonify({'error': 'No hay IPs activas disponibles para registry_candidate'}), 500
+    for ip in active_ips:
+        registration_service = f'http://{ip}/sign-up'
+        try:
+            response = requests.post(registration_service, json=data)
+            response.raise_for_status()
+            return response.json(), response.status_code
+        except requests.exceptions.RequestException:
+            continue
+
+    return jsonify({'error': 'No se pudo registrar en ninguna IP activa'}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
-
