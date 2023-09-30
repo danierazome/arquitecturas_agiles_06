@@ -1,33 +1,35 @@
-import base64
+import smtplib
 from email.mime.text import MIMEText
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from requests import HTTPError
-
+from email.mime.multipart import MIMEMultipart
 
 class Email:
 
-    SCOPES = [
-        "https://www.googleapis.com/auth/gmail.send"
-    ]
-    flow = InstalledAppFlow.from_client_secrets_file(
-        'credentials.json', SCOPES)
-    creds = flow.run_local_server(port=0)
-
-    service = build('gmail', 'v1', credentials=creds)
-
     def send_email(self, email):
-        message = MIMEText(
-            'Usuario fue bloqueado por 3 intentos fallidos en autenticación')
-        message['subject'] = 'Usuario bloqueado ABC jobs'
-        message['to'] = email
+        # Configurar el remitente y las credenciales
+        rem_email = 'ssierraoxxonv@gmail.com'
+        rem_pass = 'qceo xvdw bwyc jtut'
 
-        create_message = {'raw': base64.urlsafe_b64encode(
-            message.as_bytes()).decode()}
+        # Configurar el destinatario y el mensaje
+        rec_email = email
+        subj = 'Usuario bloqueado ABC jobs'
+        txt_msg = 'Usuario fue bloqueado por 3 intentos fallidos en autenticación'
 
         try:
-            message = (self.service.users().messages().send(
-                userId="me", body=create_message).execute())
-            print("Mensaje enviado")
-        except HTTPError as error:
-            print(F'An error occurred: {error}')
+            # Iniciar una conexión SMTP con el servidor de correo
+            servidor_smtp = smtplib.SMTP("smtp.gmail.com", 587)
+            servidor_smtp.starttls()
+            servidor_smtp.login(rem_email, rem_pass)
+
+            # Crear el mensaje MIME
+            msg = MIMEMultipart()
+            msg["From"] = rem_email
+            msg["To"] = rec_email
+            msg["Subject"] = subj
+            msg.attach(MIMEText(txt_msg, 'plain'))
+
+            # Enviar el correo electrónico
+            servidor_smtp.sendmail(rem_email, rec_email, msg.as_string())
+            servidor_smtp.quit()
+            print("Correo electrónico enviado correctamente")
+        except Exception as e:
+            print(f"Error al enviar el correo electrónico: {str(e)}")

@@ -9,7 +9,7 @@ from vistas import VistaBloqueo
 # ----------> FLASK APP
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@172.17.0.2:5432/arquitectura'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@localhost:5432/arquitectura'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 

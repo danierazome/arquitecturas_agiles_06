@@ -13,7 +13,7 @@ max_intentos_fallidos = 3
 estado_activo = 1
 estado_bloquedo = 2
 
-RABBITMQ_ADDRESS = '172.17.0.3'
+RABBITMQ_ADDRESS = 'localhost'
 
 
 class VistaBloqueo(Resource):
@@ -21,6 +21,7 @@ class VistaBloqueo(Resource):
     def post(self):
 
         date_now = datetime.datetime.now()
+        print(date_now)
 
         intento_fallido = IntentoFallido(
             user_id=request.json["user_id"],
@@ -33,6 +34,7 @@ class VistaBloqueo(Resource):
         intentos = IntentoFallido.query.filter(
             IntentoFallido.user_id == request.json["user_id"],
             IntentoFallido.fecha_intento >= (date_now - timedelta(minutes=3))).all()
+        print(f'los intentos son {intentos}')
 
         if (len(intentos) < max_intentos_fallidos):
             return {"estado_bloqueo": "{} intento fallido por el usuario".format(len(intentos))}, 401

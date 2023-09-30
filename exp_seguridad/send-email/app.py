@@ -7,7 +7,7 @@ from send_email import Email
 # ----------> FLASK APP
 app = Flask(__name__)
 
-app.config["CONEY_BROKER_URI"] = 'amqp://guest:guest@172.17.0.3'
+app.config["CONEY_BROKER_URI"] = 'amqp://guest:guest@localhost'
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
 
