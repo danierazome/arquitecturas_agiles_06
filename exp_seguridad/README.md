@@ -1,5 +1,5 @@
 # INSTALACION LOCAL PARA REALIZAR EL EXPERIMENTO.
-## Instalación y configuración de la base de datos para el experimento (Se debe contar con docker previamente instalado https://www.docker.com/get-started/):
+## Instalación y configuración de la base de datos para el experimento (Se debe contar con docker previamente instalado https://www.docker.com/get-started/) además se debe contar con python >= 3.10.12:
 - **Descargar posgres y configurarlo:** `docker run --name arquitectura-postgres -e POSTGRES_USER=user -e POSTGRES_PASSWORD=password -e POSTGRES_DB=arquitectura -p 5432:5432 -d postgres`
 - **Ingresar al contenedor en una terminal:** `docker exec -it arquitectura-postgres bash`
 - **Ingresar a la db:** `psql -U user --password password --db arquitectura`
@@ -8,7 +8,7 @@
 - **Crear CandidatoN2:** `INSERT INTO Candidato (usuario, password, nombre, experiencia, telefono, email) VALUES ('test2', '4321', 'test testing2', 'Experiencia del Candidato2', '1234567890', 'correo@valido.com');`
 - **Crear tabla *Empleado*:** `CREATE TABLE Empleado (id SERIAL PRIMARY KEY, usuario VARCHAR(60), password VARCHAR(60));`
 - **Crear usuario Empleado:** `INSERT INTO Empleado (usuario, password) VALUES ('empleado1', '6789');`
-- **Crear tabla *IntentoFallido*:** `CREATE TABLE IntentoFallido (id SERIAL PRIMARY KEY, user_id INTEGER, fecha_intento TIMESTAMP);`
+- **Crear tabla *IntentoFallido*:** `CREATE TABLE intento_fallido (id SERIAL PRIMARY KEY, user_id INTEGER, fecha_intento TIMESTAMP);`
 
 ## Instalación y configuración de RabbitMQ:
 - **Descargar RabbitMQ:** `docker run -d --hostname arquitectura --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management`
