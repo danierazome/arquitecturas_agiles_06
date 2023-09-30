@@ -4,8 +4,8 @@
 - **Ingresar al contenedor en una terminal:** `docker exec -it arquitectura-postgres bash`
 - **Ingresar a la db:** `psql -U user --password password --db arquitectura`
 - **Crear tabla *Candidato*:** `CREATE TABLE Candidato (id SERIAL PRIMARY KEY, usuario VARCHAR(60), password VARCHAR(60), nombre VARCHAR(60), experiencia VARCHAR(60), telefono VARCHAR(60), email VARCHAR(60), estado INTEGER);`
-- **Crear Candidato:** `INSERT INTO Candidato (usuario, password, nombre, experiencia, telefono, email) VALUES ('test1', '1234', 'test testing', 'Experiencia del Candidato', '123456789', 'correo@valido.com');`
-- **Crear CandidatoN2:** `INSERT INTO Candidato (usuario, password, nombre, experiencia, telefono, email) VALUES ('test2', '4321', 'test testing2', 'Experiencia del Candidato2', '1234567890', 'correo@valido.com');`
+- **Crear Candidato:** `INSERT INTO Candidato (usuario, password, nombre, experiencia, telefono, email) VALUES ('candidato1', '1234', 'test testing', 'Experiencia del Candidato', '123456789', 'correo@valido1.com');`
+- **Crear CandidatoN2:** `INSERT INTO Candidato (usuario, password, nombre, experiencia, telefono, email) VALUES ('candidato2', '7890', 'test testing2', 'Experiencia del Candidato2', '1234567890', 'correo@valido2.com');`
 - **Crear tabla *Empleado*:** `CREATE TABLE Empleado (id SERIAL PRIMARY KEY, usuario VARCHAR(60), password VARCHAR(60));`
 - **Crear usuario Empleado:** `INSERT INTO Empleado (usuario, password) VALUES ('empleado1', '6789');`
 - **Crear tabla *IntentoFallido*:** `CREATE TABLE intento_fallido (id SERIAL PRIMARY KEY, user_id INTEGER, fecha_intento TIMESTAMP);`
