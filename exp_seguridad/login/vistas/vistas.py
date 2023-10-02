@@ -30,7 +30,7 @@ class VistaLoginCandidato(Resource):
             return response_generar_token.json()
 
         response_block_service = requests.post(
-            url='http://localhost:5000/api/intento-fallido', json={"user_id": candidato.id})
+            url='http://localhost:5004/api/intento-fallido', json={"user_id": candidato.id})
 
         return response_block_service.json(), response_block_service.status_code
 
